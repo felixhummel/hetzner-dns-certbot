@@ -8,7 +8,7 @@ zone_id=$(curl -Ss \
         "https://dns.hetzner.com/api/v1/zones?search_name=${search_name}" | \
         jq ".\"zones\"[] | select(.name == \"${search_name}\") | .id" 2>/dev/null | tr -d '"')
 
-data=<<EOF
+data=$(cat <<EOF
 {
   "value": "${CERTBOT_VALIDATION}",
   "ttl": 300,
@@ -17,6 +17,7 @@ data=<<EOF
   "zone_id": "${zone_id}"
 }
 EOF
+)
 
 curl -Ss -X "POST" "https://dns.hetzner.com/api/v1/records" \
      -H 'Content-Type: application/json' \
